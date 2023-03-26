@@ -52,7 +52,11 @@ example
 `docker push w3sherpa/umbraco11-chamalpitho:latest`  
 
 
-pulling and running the image 
+## Pulling and running the image   
+1. docker login
+2. username:w3sherpa
+3. password:T3serract  
+
 `docker image pull w3sherpa/umbraco11-chamalpitho:latest`
 
-`docker run --rm -t -p 8088:80 w3sherpa/umbraco11-chamalpitho:latest`
+`docker run --rm -d -p 8088:80 w3sherpa/umbraco11-chamalpitho:latest`
