@@ -33,6 +33,7 @@ apt-get install -y erlang-base \
 
 `rabbitmqctl add_user username password`
 `rabbitmqctl set_user_tags username administrator`
+`rabbitmqctl set_permissions -p "/" "supersherpa" ".*" ".*" ".*"`  
 
 1. Make sure to enable ssh, and port 1433 in the ubuntu server
     
