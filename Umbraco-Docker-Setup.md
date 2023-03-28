@@ -57,6 +57,6 @@ example
 2. username:w3sherpa
 3. password:T3serract  
 
-`docker image pull w3sherpa/umbraco11-chamalpitho:latest`
+`docker image pull w3sherpa/sherpa-ticket:latest`
 
-`docker run --rm -d -p 8088:80 w3sherpa/umbraco11-chamalpitho:latest`
+`docker run --rm -d -p 8090:80 w3sherpa/sherpa-ticket:latest`
