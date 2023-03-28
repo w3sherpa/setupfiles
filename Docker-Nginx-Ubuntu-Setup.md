@@ -17,7 +17,7 @@
    > <br>1. Run `cd /etc/nginx/sites-enabled`  
    > 2. Run `sudo nano apps.conf` to create a new conf fille  
    >3. Add following lines
-   
+   ><br>4. Run `systemctl restart nginx` to restart, `systemctl status nginx` to make sure nginx running
    >server {  
     listen        80;  
     server_name   chamalpitho.com *.chamalpitho.com;  
@@ -46,7 +46,15 @@ server {
         proxy_set_header   X-Forwarded-Proto $scheme;  
     }  
 }  
-    ><br>4. Run `systemctl restart nginx` to restart, `systemctl status nginx` to make sure nginx running
+
+redirec traffic to https:
+server {
+    listen 80;
+    server_name   sherpaticket.com *.sherpaticket.com;  
+    return 301 https://www.sherpaticket.com$request_uri;
+}
+
+
 
 8. Update dns ( namecheap ) to point the server_names in above setting to the IP address of the server.
 
