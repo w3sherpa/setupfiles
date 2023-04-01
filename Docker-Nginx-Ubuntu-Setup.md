@@ -15,7 +15,7 @@
     >4. Repeat above step to update app2 index.html container with App-Two word.<br><br>
 7. Add these site to Sites enabled:  
    > <br>1. Run `cd /etc/nginx/sites-enabled`  
-   > 2. Run `sudo nano apps.conf` to create a new conf fille  
+   > 2. Run `sudo /etc/nginx/sites-enabled/nano apps.conf` to create a new conf fille  
    >3. Add following lines
    ><br>4. Run `systemctl restart nginx` to restart, `systemctl status nginx` to make sure nginx running
    >server {  
@@ -46,6 +46,22 @@ server {
         proxy_set_header   X-Forwarded-Proto $scheme;  
     }  
 }  
+
+server {
+    listen        80;
+    server_name   dotnetsherpa.com *.dotnetsherpa.com;
+    location / {
+        proxy_pass         http://localhost:5601;
+        proxy_http_version 1.1;
+        proxy_set_header   Upgrade $http_upgrade;
+        proxy_set_header   Connection keep-alive;
+        proxy_set_header   Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+    }
+}
 
 redirec traffic to https:
 server {

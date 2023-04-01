@@ -35,7 +35,7 @@ apt-get install -y erlang-base \
 `rabbitmqctl set_user_tags username administrator`
 `rabbitmqctl set_permissions -p "/" "supersherpa" ".*" ".*" ".*"`  
 
-1. Make sure to enable ssh, and port 1433 in the ubuntu server
+1. Make sure following service and ports are open
     
     >`sudo ufw status`  
     `sudo ufw allow OpenSSH`
@@ -44,7 +44,7 @@ apt-get install -y erlang-base \
     `sudo ufw allow 15672`
     `sudo ufw allow 5672`
     `sudo ufw allow 5671`      
-    ` sudo ufw status`  
+    `sudo ufw status`  
     `sudo ufw enable`  
 
 2. Useful cmds
