@@ -19,6 +19,7 @@ Open a terminal and run the following commands:
 `sudo apt update`
 
 ### Install .NET
+`apt install dotnet-sdk-7.0`
 `apt install aspnetcore-runtime-7.0`
 
 ## Service installation
