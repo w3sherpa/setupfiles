@@ -3,9 +3,9 @@
 3. Install Docker
    1. https://docs.docker.com/engine/install/ubuntu/
 4. Run  
-   `docker run --name app1 -p 8081:80 -d nginx`  
+   `sudo docker run --name app1 -p 8081:80 -d nginx`  
    will create app1 running on 8081  
-   `docker run --name app2 -p 8082:80 -d nginx`  
+   `sudo docker run --name app2 -p 8082:80 -d nginx`  
    will create app1 running on 8082
 5. Runs `docker ps` to get list of new containers.
 6. Update index file indie the contailer
@@ -15,7 +15,7 @@
     >4. Repeat above step to update app2 index.html container with App-Two word.<br><br>
 7. Add these site to Sites enabled:  
    > <br>1. Run `cd /etc/nginx/sites-enabled`  
-   > 2. Run `sudo /etc/nginx/sites-enabled/nano apps.conf` to create a new conf fille  
+   > 2. Run `sudo nano /etc/nginx/sites-enabled/apps.conf` to create a new conf fille  
    >3. Add following lines
    ><br>4. Run `systemctl restart nginx` to restart, `systemctl status nginx` to make sure nginx running
    >server {  
