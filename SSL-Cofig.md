@@ -4,7 +4,7 @@
     `sudo nano sherpaticket.key` and copy paste the key content
     `sudo nano www_sherpaticket_com_chain.crt` and copy past the crt content
 
-
+3. `Make sure port forwarding on both 80 and 443 on router for home servers`
 
 server {
     listen 443 ssl;
@@ -24,6 +24,33 @@ server {
    	 proxy_set_header	X-Forwarded-Proto $scheme;
 
    	 proxy_pass	http://localhost:8090;
+   	 proxy_ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    }
+     	if ($request_method !~ ^(GET|HEAD|POST)$)
+     	{
+        	return 405;
+    }
+}
+
+
+server {
+    listen 443 ssl;
+    server_name www.w3sherpa.com;
+    ssl_certificate    	/etc/nginx/ssl/w3sherpa/w3sherpa.chained.crt;
+    ssl_certificate_key	/etc/nginx/ssl/w3sherpa/w3sherpa.key;
+    ssl_session_cache    shared:SSL:1m;
+    ssl_session_timeout    5m;
+    ssl_protocols    	TLSV1.1 TLSV1.2 TLSV1.3;
+    ssl_ciphers    	HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers	on;
+    access_log	/var/log/nginx/nginx-w3sherpa.log;
+    location / {
+   	 proxy_set_header	Host $host;
+   	 proxy_set_header	X-Real-IP @remote_addr;
+   	 proxy_set_header	X-Forwarded-For $proxy_add_X_forwarded_for;
+   	 proxy_set_header	X-Forwarded-Proto $scheme;
+
+   	 proxy_pass	http://192.168.1.64;
    	 proxy_ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
     }
      	if ($request_method !~ ^(GET|HEAD|POST)$)
