@@ -1,0 +1,89 @@
+Install docker
+https://docs.docker.com/engine/install/ubuntu/
+
+
+Install docker compose
+
+> sudo apt update
+
+> sudo apt-get install docker-compose -y
+
+
+Create a directory named jenkins_compose and create a file named docker-compose.yaml with these contents.
+
+# docker-compose.yaml
+version: '3.7'
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    restart: unless-stopped
+    privileged: true
+    user: root
+    ports:
+     - 8080:8080
+     - 50000:50000
+   container_name: jenkins
+   volumes:
+     - /home/ubuntu/jenkins_compose/jenkins_configuration:/var/jenkins_home
+     - /var/run/docker.sock:/var/run/docker.sock
+     - /usr/local/bin/docker:/usr/local/bin/docker
+
+
+##### /home/ubuntu/ is the default userprofile, if there is different user or path change accordingly in line 16
+##### Also, version specified in docker-compose (first line) may not match the docker compose intalled. Change the compose yaml or install matching docker compose.
+
+Use following command to get secrets
+sudo cat /home/ubuntu/jenkins_compose/jenkins_configuration/secrets/initialAdminPassword
+
+>>Create git hub access token to connect Jenkin.
+1. Go to settings-> developer setting (https://github.com/settings/apps)
+2. Give it name and check repo
+ ![](/img/20231010153957.png)
+ Scroll down and click Generate token.
+3. Copy token to use in Jenkins configuration for Git connection. 
+![](/img/20231010154348.png)
+
+
+# Ngrok Setup
+Expose local genkins publicly so that github webhook can trigger jenkins pipeline.
+1. Set up ngrok account https://ngrok.com/
+2. Login to jenkins server (ubuntu). Run `sudo snap install ngrok`
+3. Verify `ngrok --version`
+
+## Two ways to run ngrok 
+### run as forground service
+4. Run `ngrok config add-authtoken 2WaU1Ok6Heo7jV4k4KfycguHeIN_6HJYnkYaffP4xje8GVafT`
+5. Run `ngrok http 8080`
+  ![](img/20231010161150.png)
+  First forwarding url is public and can be used to create webhook in git.
+  (https://1df5-76-85-76-198.ngrok-free.app)
+### run as back ground service
+1. Create a config file
+`sudo nano /snap/ngrok/config.yml`
+copy past following
+>>version: "2"
+authtoken: 2WaU1Ok6Heo7jV4k4KfycguHeIN_6HJYnkYaffP4xje8GVafT
+tunnels:
+    default:
+        proto: http
+        addr: 8080
+
+Make sure to get the correct auth token from ngrok site https://dashboard.ngrok.com/tunnels/authtokens
+
+Save and exit.
+
+2. run `nohup ngrok start --all --config="/snap/ngrok/config.yml" &` 
+nohup : no hang up, runs in background ( similar to detached in docker)
+
+After running the ngrok check for the session and get the url for web hook configuration in github
+3. https://dashboard.ngrok.com/tunnels/agents
+
+##### Use this url for github web hook
+## Setup github webhook
+1. Go to repo to set up webhook, and click on settings 
+![](img/20231010202409.png)
+2. Click on WebHooks and AddWehook
+![](img/20231010202502.png)
+Payload URL : `https://7c61-76-85-76-198.ngrok-free.app/github-webhook/` ( url from step 5 above and concat /github-webhoo/[donot miss / at the end])
+
+nohup ngrok start --all --config="/snap/ngrok/config.yml" &

@@ -16,4 +16,12 @@
 
 `docker image pull w3sherpa/sherpa-ticket:latest`
 
-`docker run --rm -d -p 8090:80 w3sherpa/sherpa-ticket:latest`
+`docker run --rm -d -p 8082:80 w3sherpa/juna-balla:latest`
+
+## List Containers
+`sudo docker container ls
+
+## Stop Container
+`sudo docker container stop <contianer-id>
+
+# Make sure to stop container before updating
