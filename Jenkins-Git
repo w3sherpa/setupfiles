@@ -1,0 +1,107 @@
+Install docker
+https://docs.docker.com/engine/install/ubuntu/
+
+
+Install docker compose
+
+> sudo apt update
+
+> sudo apt-get install docker-compose -y
+
+
+Create a directory named jenkins_compose and create a file named docker-compose.yaml with these contents.
+
+# docker-compose.yaml
+version: '3.7'
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    restart: unless-stopped
+    privileged: true
+    user: root
+    ports:
+     - 8080:8080
+     - 50000:50000
+   container_name: jenkins
+   volumes:
+     - /home/ubuntu/jenkins_compose/jenkins_configuration:/var/jenkins_home
+     - /var/run/docker.sock:/var/run/docker.sock
+     - /usr/local/bin/docker:/usr/local/bin/docker
+
+
+##### /home/ubuntu/ is the default userprofile, if there is different user or path change accordingly in line 16
+##### Also, version specified in docker-compose (first line) may not match the docker compose intalled. Change the compose yaml or install matching docker compose.
+
+Use following command to get secrets
+sudo cat /home/ubuntu/jenkins_compose/jenkins_configuration/secrets/initialAdminPassword
+
+>>Create git hub access token to connect Jenkin.
+1. Go to settings-> developer setting (https://github.com/settings/apps)
+2. Give it name and check repo
+ ![](/img/20231010153957.png)
+ Scroll down and click Generate token.
+3. Copy token to use in Jenkins configuration for Git connection. 
+![](/img/20231010154348.png)
+
+
+
+##### Setup revers proxy setup for www.dotnetsherpa.com (or any other domain availabel ) to point to jenkins.
+server {  
+    listen        80;  
+    server_name   dotnetsherpa.com *.dotnetsherpa.com;  
+    location / {  
+        proxy_pass         http://192.168.1.24:8080;  # this is the server and port where jenkins running
+        proxy_http_version 1.1;  
+        proxy_set_header   Upgrade $http_upgrade;  
+        proxy_set_header   Connection keep-alive;  
+        proxy_set_header   Host $host;  
+        proxy_cache_bypass $http_upgrade;  
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;  
+        proxy_set_header   X-Forwarded-Proto $scheme;  
+    }  
+} 
+##### Make sure the domain take you to the jenkins login page and you can login.
+
+
+## Setup github webhook
+1. Go to repo to set up webhook, and click on settings 
+![](img/20231010202409.png)
+2. Click on WebHooks and AddWehook
+![](img/20231010202502.png)
+Payload URL : `http://www.dontnetsherp.com/github-webhook/` ( url from step 5 above and concat /github-webhoo/[donot miss / at the end])
+
+
+# Test the webbook by commiting to master branch.
+
+# Get private key from jenkins servier (or running container) to create jenkins ssh connection
+##  jenkins running as container
+1. run `sudo docker ps`. Get the container id of the jenkins and use it in next step
+2. run `sudo docker exec -it <container-id> bash`
+3. run `mkdir /var/jenkins_home/.ssh`
+4. run `ssh-keygen` will output (Enter file in which to save the key (/var/   jenkins_home/.ssh/jenkins_rsa). 
+5. Just hit enter all the way (we dont need paraphrase).Get private key: run `cd /var/jenkins_home/.ssh` and run `cat jenkins_rsa` to get private key. Copy and paste it in notepade. 
+6. run `cat jenkins_rsa.pub` to get public key. Copy and paste it in notepade. 
+Setup ssh credential to run ssh comman in jenkins step.
+7. Install ssh agent in jenkin
+![](img/20231011212344.png)
+use the private key from step 5 and past it in private key box.
+8. Log in to webserver or server where jenkins going to ssh in to.
+     a. run `cd .ssh/` and run `sudo nano authorized_keys`.
+     b. copy the public key from step 6 and paste it. Cntrl X, press y to save.
+9. Create a simple test pipeline task to see if ssh working.
+>   Copy paste followin in pipeline definition. 
+    pipeline {
+      agent any
+      stages {
+          stage('Hello') {
+              steps {
+                  script{
+                  sshagent(['sshwebserver']) {                 
+                      sh 'ssh -o StrictHostKeyChecking=no -l ubuntu 192.168.1.15 ip a'
+                  }
+                  }
+              }
+          }
+      }
+  }
+10. Run the test pipeline by clicking build now. Click on the build histrory and go to console output. You should see the ip address for server we shh in to.
