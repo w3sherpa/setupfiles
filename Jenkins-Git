@@ -105,3 +105,6 @@ use the private key from step 5 and past it in private key box.
       }
   }
 10. Run the test pipeline by clicking build now. Click on the build histrory and go to console output. You should see the ip address for server we shh in to.
+
+
+# Install MS Build plugin to built .net project and soln

@@ -1,18 +1,35 @@
 # Setup
 ### Get repository
-`curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elastic.gpg`  
-`echo "deb [signed-by=/usr/share/keyrings/elastic.gpg] https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list`  
-### Install
-`sudo apt update`  
-`sudo apt install elasticsearch`  
+#Install Java and Nginx
+>sudo apt update
+sudo apt install wget curl gnupg2 -y
+sudo apt install openjdk-11-jdk -y
+java -version
+sudo apt install nginx -y
 
-### Setting
-`sudo nano /etc/elasticsearch/elasticsearch.yml`<br/>
+
+#Install and Configure Elasticsearch
+>wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+sudo apt-get install apt-transport-https
+echo "deb https://artifacts.elastic.co/packages/8.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-8.x.list
+sudo apt update
+sudo apt install elasticsearch -y
+sudo nano /etc/elasticsearch/elasticsearch.yml
+
+
 Add following lines  
+Network Section
 >`network.host: 0.0.0.0`  
 `network.bind_host: 0.0.0.0`  
 `network.publish_host: 0.0.0.0`  
 `discovery.seed_hosts: ["0.0.0.0", "[::0]"]`
+
+Security Configuration 
+Following are disabled for faster commnunication and ease of configuration.
+`xpack.security.enabled: false`
+>xpack.security.http.ssl:
+  enabled: false`
+
 
 # Verify
 `sudo systemctl start elasticsearch`
@@ -37,17 +54,6 @@ Add following lines
 `sudo ufw enable`
 `sudo ufw status`
 
-
-
-# New SETUP
-1. `sudo apt update && sudo apt upgrade`
-2. `sudo apt install default-jdk` (this is for kibana)
-3. `wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg`
-4. `sudo apt-get install apt-transport-https`
-5. `echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/8.x/apt stable main" | sudo tee /etc/apt/sources.list.d/elastic-8.x.list`
-6. `sudo apt update`
-7. `sudo apt-get install elasticsearch`
-
 After installation make sure to get the password and the certificate finger print printed on the console (if it prints)
 
 # Verify
@@ -55,24 +61,40 @@ After installation make sure to get the password and the certificate finger prin
 `sudo systemctl enable elasticsearch`
 `sudo systemctl restart elasticsearch`
 
-## Change elastic user password
+## Change elastic user password 
+
 `cd /usr/share/elasticsearch/bin/`
 `./elasticsearch-reset-password -u elastic`
 The password will be printed in the console. Makesure to save it ( you will need it to log in to Kibana)
-B0d8=itqK0YejqvSk4DL
+U:elastic:P:XStY3CNEOmBntMZPhKH9 [as of 12/09/2023]
+
+## Get Enrollment Toke to use in kibana setting
+1. `cd /usr/share/elasticsearch/bin/`
+1. `sudo ./elasticsearch-create-enrollment-token --scope kibana`
+Copy the token value and save in notepad
+[eyJ2ZXIiOiI4LjExLjIiLCJhZHIiOlsiMTkyLjE2OC4xLjM4OjkyMDAiXSwiZmdyIjoiYmYwMDY5ODcxODg2NDY3OGM3YTNmNTg2ZmU2YzFhYmJhMzIyNTc2ODFiNGZjOTNmYTBkOTk1ZDNhYWM2ZDMyNSIsImtleSI6ImNIS2pUb3dCTXRCcEJ4ZjRsYklWOmFucTR4dFhyU2dtSGJiWm90U0V6dHcifQ==]
 
 Go to 
-`https://104.237.140.169:9200` should give you login window ( change ip)
+`https://192.168.1.38:9200` should give you login window ( change ip) user username and pwd from Change elastic user password step above
 
 ## Install Kibana
 For installing and configuring Kibana Dashboard, we don’t need to add any other repository because the packages are available through the already added ElasticSearch. Hence, just use the given command:
-`sudo apt install kibana`
+`sudo apt install kibana -y`
+`sudo nano /etc/kibana/kibana.yml`
+>Uncomment and modify the following lines from:
+server.port: 5601
+server.host: "localhost"
+elasticsearch.hosts: ["http://localhost:9200"]
+To:
+server.port: 5601
+server.host: "0.0.0.0"
+elasticsearch.hosts: ["http://localhost:9200"]
 
 # Verify
-`sudo systemctl status kibana.service`
-`sudo systemctl enable kibana.service`
-`sudo systemctl restart kibana.service`
-`sudo systemctl start kibana.service`
+`sudo systemctl status kibana`
+`sudo systemctl enable kibana`
+`sudo systemctl restart kibana`
+`sudo systemctl start kibana`
 
 ## Get enrollment code
 `cd /usr/share/elasticsearch/bin/`
