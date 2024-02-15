@@ -106,5 +106,17 @@ use the private key from step 5 and past it in private key box.
   }
 10. Run the test pipeline by clicking build now. Click on the build histrory and go to console output. You should see the ip address for server we shh in to.
 
+11. If you get error 
+![](.png)
+
+Allow the user to run sudo comman with out password on the web server.
+You can configure sudo to never ask for your password.
+
+Open a Terminal window and type:
+
+sudo visudo
+In the bottom of the file, add the following line:
+
+websherpa ALL=(ALL) NOPASSWD: ALL
 
 # Install MS Build plugin to built .net project and soln

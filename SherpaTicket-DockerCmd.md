@@ -25,3 +25,6 @@
 `sudo docker container stop <contianer-id>
 
 # Make sure to stop container before updating
+
+# Get inside the container
+`docker exec -it c1f49ac4954b bash`

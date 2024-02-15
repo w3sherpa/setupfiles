@@ -70,7 +70,8 @@ server {
     return 301 https://www.sherpaticket.com$request_uri;
 }
 
-
+# Make sure to restart nxing
+`sudo systemctl restart nginx`
 
 8. Update dns ( namecheap ) to point the server_names in above setting to the IP address of the server.
 
