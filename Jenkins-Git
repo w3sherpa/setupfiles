@@ -84,12 +84,21 @@ Payload URL : `http://www.dontnetsherp.com/github-webhook/` ( url from step 5 ab
 1. run `sudo docker ps`. Get the container id of the jenkins and use it in next step
 2. run `sudo docker exec -it <container-id> bash`
 3. run `mkdir /var/jenkins_home/.ssh`
-4. run `ssh-keygen` will output (Enter file in which to save the key (/var/   jenkins_home/.ssh/jenkins_rsa). 
+4. run `ssh-keygen` will output (Enter file in which to save the key (/var/jenkins_home/.ssh/jenkins_rsa). 
 5. Just hit enter all the way (we dont need paraphrase).Get private key: run `cd /var/jenkins_home/.ssh` and run `cat jenkins_rsa` to get private key. Copy and paste it in notepade. 
 6. run `cat jenkins_rsa.pub` to get public key. Copy and paste it in notepade. 
 Setup ssh credential to run ssh comman in jenkins step.
 7. Install ssh agent in jenkin
+
+8. Create credentials (sshwebserver and websherpa)
 ![](img/20231011212344.png)
+    a. sshwebserver
+        select SSH Username with private key for kind
+        enter sshwebserver for ID and username
+    b. websherpa
+        select Username and Password key for kind
+        enter websherpa for id and username and password is login password for
+        webserver user websherpa
 use the private key from step 5 and past it in private key box.
 8. Log in to webserver or server where jenkins going to ssh in to.
      a. run `cd .ssh/` and run `sudo nano authorized_keys`.
