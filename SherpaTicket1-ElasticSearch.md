@@ -66,7 +66,7 @@ After installation make sure to get the password and the certificate finger prin
 `cd /usr/share/elasticsearch/bin/`
 `./elasticsearch-reset-password -u elastic`
 The password will be printed in the console. Makesure to save it ( you will need it to log in to Kibana)
-U:elastic:P:XStY3CNEOmBntMZPhKH9 [as of 12/09/2023]
+U:elastic:P:XStY3CNEOm9 [as of 12/09/2023]
 
 ## Get Enrollment Toke to use in kibana setting
 1. `cd /usr/share/elasticsearch/bin/`

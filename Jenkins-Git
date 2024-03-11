@@ -28,6 +28,12 @@ services:
      - /var/run/docker.sock:/var/run/docker.sock
      - /usr/local/bin/docker:/usr/local/bin/docker
 
+## Make sure to create /home/<servername ubunut or utilsherpa>/jenkins_compose/jenkins_configuration
+
+
+## Run docker-compose in the directory where you placed docker-compose.yaml.
+sudo docker-compose up -d
+
 
 ##### /home/ubuntu/ is the default userprofile, if there is different user or path change accordingly in line 16
 ##### Also, version specified in docker-compose (first line) may not match the docker compose intalled. Change the compose yaml or install matching docker compose.
