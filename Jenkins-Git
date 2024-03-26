@@ -26,7 +26,7 @@ services:
    volumes:
      - /home/ubuntu/jenkins_compose/jenkins_configuration:/var/jenkins_home
      - /var/run/docker.sock:/var/run/docker.sock
-     - /usr/local/bin/docker:/usr/local/bin/docker
+     - /usr/bin/docker:/usr/bin/docker
 
 ## Make sure to create /home/<servername ubunut or utilsherpa>/jenkins_compose/jenkins_configuration
 
@@ -42,11 +42,15 @@ Use following command to get secrets
 sudo cat /home/ubuntu/jenkins_compose/jenkins_configuration/secrets/initialAdminPassword
 
 >>Create git hub access token to connect Jenkin.
+Login to GitHub
 1. Go to settings-> developer setting (https://github.com/settings/apps)
 2. Give it name and check repo
  ![](/img/20231010153957.png)
  Scroll down and click Generate token.
-3. Copy token to use in Jenkins configuration for Git connection. 
+3. Copy token to use in Jenkins configuration for Git connection.
+Create New Credential for github connection.
+    username: git username lonheeti@gmailcom
+    pwd: is same common one
 ![](/img/20231010154348.png)
 
 
@@ -76,6 +80,12 @@ server {
 ![](img/20231010202502.png)
 Payload URL : `http://www.dontnetsherp.com/github-webhook/` ( url from step 5 above and concat /github-webhoo/[donot miss / at the end])
 
+# Setup DockerHub Connection for pipeline login
+The jenkins pipeline has a stage where the built docker image is pushed to docker hub. For this, jenking need to log in to docker hub
+![](20240326101835.png)
+We need to create a credential of type "Secret" in jenkins credentials and give it ID that will be referenced in jenkins pipeline. Here we create credential screte with id dockerhub, and the script in the steps witll make that to the local variable dockerhubpwd
+
+![](20240326101657.png)
 
 # Test the webbook by commiting to master branch.
 
