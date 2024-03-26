@@ -87,6 +87,8 @@ We need to create a credential of type "Secret" in jenkins credentials and give 
 
 ![](20240326101657.png)
 
+# Make sure all these credentials are in place
+![](20240326102209.png)
 # Test the webbook by commiting to master branch.
 
 # Get private key from jenkins servier (or running container) to create jenkins ssh connection
