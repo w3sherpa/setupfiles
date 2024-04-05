@@ -136,7 +136,7 @@ use the private key from step 5 and past it in private key box.
 11. If you get error 
 ![](.png)
 
-Allow the user to run sudo comman with out password on the web server.
+## Allow the user to run sudo comman with out password on the web server.
 You can configure sudo to never ask for your password.
 
 Open a Terminal window and type:
