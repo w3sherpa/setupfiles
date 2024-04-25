@@ -1,5 +1,16 @@
+## Renew Expired namecheap cert ( only if its expired )
+1. Install Open SSL if not installed.
+2. Go to C:\Program Files\OpenSSL-Win64\bin>
+3. openssl req -new -newkey rsa:2048 -nodes -keyout sherpaticket.key -out sherpaticket_csr.txt
+4. Cert and Key will be created the in same bin folder.
+5. Ressiue the cert in namecheap ui by uploading new CSR
+6. Download the .crt and .ca-bundle and combine them in notepad (.crt content first and then .ca-bundle) and save as <service-name>.chained.crt
+7. Copy this to the web server.
+8. To empyt current cert content in web server user `echo "" <cert-file-name>.crt/key` and past the new value by using nano editor
+
 ## Copy files command from local to remote ubuntu
-    `scp -rp C:/SSLCerts/sherpaticket.com/MoveToServer/* ubuntu@192.168.1.12:/etc/nginx/ssl`
+    `scp -rp C:/SSLCerts/sherpaticket.com/MoveToServer/* websherpa@192.168.1.19:/etc/nginx/ssl`
+    `make sure to change websherpa to the name of the root or admin user`
 
 
 1. `sudo mkdir /etc/nginx/ssl`
@@ -11,8 +22,6 @@
 3. `Make sure port forwarding on both 80 and 443 on router for home servers`
 
 4. add following block to nginx
-
-
 
 server {
     listen 443 ssl;
