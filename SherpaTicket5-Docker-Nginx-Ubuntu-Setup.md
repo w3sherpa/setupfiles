@@ -85,11 +85,14 @@ server {
 
 2. Make sure to enable ssh, and port 1433 in the ubuntu server
     
-    >`sudo ufw status`  
+    >
+    `sudo ufw status`  
+    `sudo ufw allow "Nginx Full"`    
     `sudo ufw allow ssh`  
     `sudo ufw allow 1433`  
-    ` sudo ufw status`  
+    `sudo ufw status`  
     `sudo ufw enable`  
+    
 
 3. Get public ip of the ubuntu server and connect from ssms
    

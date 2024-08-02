@@ -16,20 +16,10 @@ sudo apt update
 sudo apt install elasticsearch -y
 sudo nano /etc/elasticsearch/elasticsearch.yml
 
-
-Add following lines  
-Network Section
->`network.host: 0.0.0.0`  
-`network.bind_host: 0.0.0.0`  
-`network.publish_host: 0.0.0.0`  
-`discovery.seed_hosts: ["0.0.0.0", "[::0]"]`
-
-Security Configuration 
-Following are disabled for faster commnunication and ease of configuration.
-`xpack.security.enabled: false`
->xpack.security.http.ssl:
-  enabled: false`
-
+Set following
+`http.port: 9200`
+`http.host: 0.0.0.0`
+`cluster.initial_master_nodes: ["elasticsearch"]`
 
 # Verify
 `sudo systemctl start elasticsearch`
@@ -66,13 +56,13 @@ After installation make sure to get the password and the certificate finger prin
 `cd /usr/share/elasticsearch/bin/`
 `./elasticsearch-reset-password -u elastic`
 The password will be printed in the console. Makesure to save it ( you will need it to log in to Kibana)
-U:elastic:P:XStY3CNEOm9 [as of 12/09/2023]
+U:elastic:P:wFKhpbtKichaQ7qRocGi [as of 12/09/2023]
 
 ## Get Enrollment Toke to use in kibana setting
 1. `cd /usr/share/elasticsearch/bin/`
 1. `sudo ./elasticsearch-create-enrollment-token --scope kibana`
 Copy the token value and save in notepad
-[eyJ2ZXIiOiI4LjExLjIiLCJhZHIiOlsiMTkyLjE2OC4xLjM4OjkyMDAiXSwiZmdyIjoiYmYwMDY5ODcxODg2NDY3OGM3YTNmNTg2ZmU2YzFhYmJhMzIyNTc2ODFiNGZjOTNmYTBkOTk1ZDNhYWM2ZDMyNSIsImtleSI6ImNIS2pUb3dCTXRCcEJ4ZjRsYklWOmFucTR4dFhyU2dtSGJiWm90U0V6dHcifQ==]
+[eyJ2ZXIiOiI4LjE0LjAiLCJhZHIiOlsiNDUuMzMuOS4xNDE6OTIwMCJdLCJmZ3IiOiJlMDdjMTA5Mzk5ODZhNTZkMTdlYTA1YzdjZGYzYjM0NTg2MzA0MTM0NDY0ZDc5YTMyN2ZjZjZjNTYyNGZlZTZmIiwia2V5IjoiRFdiVkQ1RUJSNjJlOVpNcGVVZ2o6QW1UNHFlTmVRdU8tRzlTSXBHUC05dyJ9]
 
 Go to 
 `https://192.168.1.38:9200` should give you login window ( change ip) user username and pwd from Change elastic user password step above
@@ -96,6 +86,10 @@ elasticsearch.hosts: ["http://localhost:9200"]
 `sudo systemctl restart kibana`
 `sudo systemctl start kibana`
 
+# GOTO http://localhost:5601
+
+# When setting up kibana it will ask for enrollment token and PWD that is created in above step
+
 ## Get enrollment code
 `cd /usr/share/elasticsearch/bin/`
 `./elasticsearch-create-enrollment-token --scope kibana`
@@ -104,6 +98,12 @@ elasticsearch.hosts: ["http://localhost:9200"]
 `cd /usr/share/kibana/bin/`
 ` ./kibana-verification-code`
 
+
+# DONT FORGET
+
+set:
+`-Xms1g`
+`-Xmx1g`
 
 #Issues with SSL and configuring in Program.cs
 1. Make sure to have fingerprint 
