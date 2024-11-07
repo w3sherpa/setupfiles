@@ -16,17 +16,16 @@ version: '3.7'
 services:
   jenkins:
     image: jenkins/jenkins:lts
-    restart: unless-stopped
     privileged: true
     user: root
     ports:
-     - 8080:8080
-     - 50000:50000
-   container_name: jenkins
-   volumes:
-     - /home/ubuntu/jenkins_compose/jenkins_configuration:/var/jenkins_home
-     - /var/run/docker.sock:/var/run/docker.sock
-     - /usr/bin/docker:/usr/bin/docker
+      - 8081:8080
+      - 50000:50000
+    container_name: jenkins
+    volumes:
+      - /home/utilsherpa/jenkins_compose/jenkins_configuration:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/local/bin/docker:/usr/local/bin/docker
 
 ## Make sure to create /home/<servername ubunut or utilsherpa>/jenkins_compose/jenkins_configuration
 
