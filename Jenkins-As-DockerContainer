@@ -25,7 +25,7 @@ services:
     volumes:
       - /home/utilsherpa/jenkins_compose/jenkins_configuration:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
-      - /usr/local/bin/docker:/usr/local/bin/docker
+      - /usr/bin/docker:/usr/bin/docker
 
 ## Make sure to create /home/<servername ubunut or utilsherpa>/jenkins_compose/jenkins_configuration
 
@@ -38,7 +38,7 @@ sudo docker-compose up -d
 ##### Also, version specified in docker-compose (first line) may not match the docker compose intalled. Change the compose yaml or install matching docker compose.
 
 Use following command to get secrets
-sudo cat /home/ubuntu/jenkins_compose/jenkins_configuration/secrets/initialAdminPassword
+sudo cat /home/utilsherpa(or.whatever.hostname)/jenkins_compose/jenkins_configuration/secrets/initialAdminPassword
 
 >>Create git hub access token to connect Jenkin.
 Login to GitHub
@@ -71,6 +71,7 @@ server {
 } 
 ##### Make sure the domain take you to the jenkins login page and you can login.
 
+## Make Sure to install SSH Agent Plugin
 
 ## Setup github webhook
 1. Go to repo to set up webhook, and click on settings 
@@ -106,11 +107,13 @@ Setup ssh credential to run ssh comman in jenkins step.
     a. sshwebserver
         select SSH Username with private key for kind
         enter sshwebserver for ID and username
-    b. websherpa
-        select Username and Password key for kind
-        enter websherpa for id and username and password is login password for
-        webserver user websherpa
-use the private key from step 5 and past it in private key box.
+        use the private key from step 5 and past it in private key box.
+
+        Make sure you also include
+        -----BEGIN OPENSSH PRIVATE KEY-----
+        and
+        -----END OPENSSH PRIVATE KEY-----
+   
 8. Log in to webserver or server where jenkins going to ssh in to.
      a. run `cd .ssh/` and run `sudo nano authorized_keys`.
      b. copy the public key from step 6 and paste it. Cntrl X, press y to save.
@@ -135,14 +138,17 @@ use the private key from step 5 and past it in private key box.
 11. If you get error 
 ![](.png)
 
-## Allow the user to run sudo comman with out password on the web server.
+## Allow the user to run sudo comman with out password on the web server or util server.
 You can configure sudo to never ask for your password.
 
 Open a Terminal window and type:
 
-sudo visudo
+`sudo visudo`
 In the bottom of the file, add the following line:
 
 websherpa ALL=(ALL) NOPASSWD: ALL
 
+OR
+
+utilsherpa ALL=(ALL) NOPASSWD: ALL
 # Install MS Build plugin to built .net project and soln
