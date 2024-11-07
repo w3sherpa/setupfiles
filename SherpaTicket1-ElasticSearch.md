@@ -54,7 +54,7 @@ After installation make sure to get the password and the certificate finger prin
 ## Change elastic user password 
 
 `cd /usr/share/elasticsearch/bin/`
-`./elasticsearch-reset-password -u elastic`
+`sudo ./elasticsearch-reset-password -u elastic`
 The password will be printed in the console. Makesure to save it ( you will need it to log in to Kibana)
 U:elastic:P:wFKhpbtKichaQ7qRocGi [as of 12/09/2023]
 
@@ -108,7 +108,7 @@ set:
 #Issues with SSL and configuring in Program.cs
 1. Make sure to have fingerprint 
     Run
-    `openssl x509 -fingerprint -sha256 -in /etc/elasticsearch/certs/http_ca.crt`
+    `sudo openssl x509 -fingerprint -sha256 -in /etc/elasticsearch/certs/http_ca.crt`
     Should return sha256 fingerprint and cert. Copy the Finger print value and put it in the setting 
 >.WriteTo.Elasticsearch(
         new ElasticsearchSinkOptions(new Uri(context.Configuration["ElasticSearch:Uri"]))
