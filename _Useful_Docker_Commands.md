@@ -47,3 +47,25 @@ sudo docker inspect sherpa-ticket -f "{{json .NetworkSettings.Networks }}"
 `scp -rp  C:/src_path/* root@45.33.2.230:/var/destination_path`
 ## If permission denied to the folder, ssh in to the linus destination server and run:
 `sudo chown -R utilsherpa:utilsherpa /var/destination_path`
+
+
+# Manual docker push
+`Go to the app folder where the docker file is`
+
+## For Scheapp-api
+docker build -t scheapp-api:latest .
+docker login -u lonheeti@gmail.com -p T3serract
+docker tag scheapp-api w3sherpa/scheapp-api:latest
+docker push w3sherpa/scheapp-api:latest
+    ## GO to the utilsherpa vm and run
+    sudo docker image pull w3sherpa/scheapp-api:latest
+    sudo docker run --rm -d --name=scheapp-api -p 8001:8080 w3sherpa/scheapp-api:latest
+
+## For Scheapp-app
+docker build -t scheapp-app:latest .
+docker login -u lonheeti@gmail.com -p T3serract
+docker tag scheapp-app w3sherpa/scheapp-app:latest
+docker push w3sherpa/scheapp-app:latest
+   ## GO to the webshepa vm and run
+   sudo docker image pull w3sherpa/scheapp-app:latest
+   sudo docker run --rm -d --name=scheapp-app -p 8002:8080 w3sherpa/scheapp-app:latest

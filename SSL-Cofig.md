@@ -8,6 +8,8 @@
 7. Copy this to the web server.
 8. To empyt current cert content in web server user `echo "" <cert-file-name>.crt/key` and past the new value by using nano editor
 
+## ssh 192.168.1.19 -l websherpa
+
 ## Copy files command from local to remote ubuntu
     `scp -rp C:/SSLCerts/sherpaticket.com/MoveToServer/* websherpa@192.168.1.19:/etc/nginx/ssl`
     `make sure to change websherpa to the name of the root or admin user`
