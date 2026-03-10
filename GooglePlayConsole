@@ -1,0 +1,29 @@
+# Deploy .net maui app
+
+1. Key Generation
+   `cd c:\<path-where-you-want-to-store-this-key>keytool -genkey -v -keystore key.keystore -alias MauiAlias -keyalg RSA -keysize 2048 -validity 10000`
+   Hit enter and entery password.
+   Then fill out the form.
+
+2. Make sure to have this for anroid buil
+
+<PropertyGroup Condition="'$(TargetFramework)'=='net8.0-android'">
+  <!-- Build configuration -->
+  <Configuration>Release</Configuration>
+  <PlatformTarget>AnyCPU</PlatformTarget>
+
+  <!-- Keystore settings -->
+
+<AndroidKeyStore>True</AndroidKeyStore>
+<AndroidSigningKeyStore>key.keystore</AndroidSigningKeyStore>
+<AndroidSigningKeyAlias>myalias</AndroidSigningKeyAlias>
+<AndroidSigningKeyPass>your_key_password</AndroidSigningKeyPass>
+<AndroidSigningStorePass>your_keystore_password</AndroidSigningStorePass>
+
+  <!-- Output type -->
+
+<AndroidPackageFormat>aab</AndroidPackageFormat> <!-- Use aab for Play Store -->
+</PropertyGroup>
+
+3. dotnet publish -c Release -f:net8.0-android
+4. deploy the signed aab file to play console
