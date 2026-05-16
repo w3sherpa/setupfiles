@@ -8,24 +8,36 @@ Install docker compose
 
 > sudo apt-get install docker-compose -y
 
+# Run these command to create mapped volumes for jenkins
+sudo mkdir -p /opt/jenkins
+sudo mkdir -p /etc/jenkins
+sudo mkdir -p /var/lib/jenkins/jenkins_home
+sudo mkdir -p /var/log/jenkins
+
+sudo chown -R 1000:1000 /var/lib/jenkins/jenkins_home
+
 
 Create a directory named jenkins_compose and create a file named docker-compose.yaml with these contents.
 
 # docker-compose.yaml
-version: '3.7'
 services:
   jenkins:
-    image: jenkins/jenkins:lts
-    privileged: true
-    user: root
-    ports:
-      - 8081:8080
-      - 50000:50000
+    image: jenkins/jenkins:lts-jdk17
     container_name: jenkins
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+      - "50000:50000"
     volumes:
-      - /home/utilsherpa/jenkins_compose/jenkins_configuration:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /usr/bin/docker:/usr/bin/docker
+      - /var/lib/jenkins/jenkins_home:/var/jenkins_home
+    environment:
+      - TZ=America/Chicago
+
+
+
+Get the initial admin password:
+
+docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 
 ## Make sure to create /home/<servername ubunut or utilsherpa>/jenkins_compose/jenkins_configuration
 
@@ -52,7 +64,10 @@ Create New Credential for github connection.
     pwd: is same common one
 ![](/img/20231010154348.png)
 
-
+# Run
+sudo 
+sudo nano /etc/nginx/sites-available/jenkins
+sudo ln -s /etc/nginx/sites-available/jenkins /etc/nginx/sites-enabled/jenkins
 
 ##### Setup revers proxy setup for www.dotnetsherpa.com (or any other domain availabel ) to point to jenkins.
 server {  
@@ -83,7 +98,9 @@ Payload URL : `http://www.dontnetsherp.com/github-webhook/` ( url from step 5 ab
 # Setup DockerHub Connection for pipeline login
 The jenkins pipeline has a stage where the built docker image is pushed to docker hub. For this, jenking need to log in to docker hub
 ![](20240326101835.png)
-We need to create a credential of type "Secret" in jenkins credentials and give it ID that will be referenced in jenkins pipeline. Here we create credential screte with id dockerhub, and the script in the steps witll make that to the local variable dockerhubpwd
+We need to create a credential of type "Secret" in jenkins credentials and give it ID that will be referenced in jenkins pipeline.
+Value of the secret is the same password to login to https://hub.docker.com/. Go see in the vault if you dont remember
+ Here we create credential screte with id dockerhub, and the script in the steps witll make that to the local variable dockerhubpwd
 
 ![](20240326101657.png)
 

@@ -22,7 +22,7 @@
 ### See what network(s) your container is on, assuming your container is called sherpa-ticket:
 sudo docker inspect sherpa-ticket -f "{{json .NetworkSettings.Networks }}"
 ## To push to docker hub  
-1. docker login
+1. docker loginscp
 2. username:w3sherpa
 3. password:T3serract
 
@@ -44,7 +44,7 @@ sudo docker inspect sherpa-ticket -f "{{json .NetworkSettings.Networks }}"
 
 ### Copy file from windows os to linux
 ## Use following in cmd to copy all files from c:/src_path/ to root@45.33.2.230:/var/destination_path
-`scp -rp  C:/src_path/* root@45.33.2.230:/var/destination_path`
+` -rp  C:/src_path/* root@45.33.2.230:/var/destination_path`
 ## If permission denied to the folder, ssh in to the linus destination server and run:
 `sudo chown -R utilsherpa:utilsherpa /var/destination_path`
 
