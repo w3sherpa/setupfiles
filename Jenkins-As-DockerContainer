@@ -16,24 +16,61 @@ sudo mkdir -p /var/log/jenkins
 
 sudo chown -R 1000:1000 /var/lib/jenkins/jenkins_home
 
+cd /opt/jenkins
+#Run sudo nano Dockerfile
 
-Create a directory named jenkins_compose and create a file named docker-compose.yaml with these contents.
+Paste Following content
 
-# docker-compose.yaml
+----
+FROM jenkins/jenkins:lts-jdk17
+
+USER root
+
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release \
+ && install -m 0755 -d /etc/apt/keyrings \
+ && curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc \
+ && chmod a+r /etc/apt/keyrings/docker.asc \
+ && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
+    > /etc/apt/sources.list.d/docker.list \
+ && apt-get update \
+ && apt-get install -y docker-ce-cli \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+
+USER jenkins
+
+----
+
+#Run sudo nano docker-compose.yml
+
+Paste Following content
+
+---
 services:
   jenkins:
-    image: jenkins/jenkins:lts-jdk17
+    build:
+      context: /opt/jenkins
+      dockerfile: Dockerfile
+    image: my-jenkins-docker-cli:lts
     container_name: jenkins
     restart: unless-stopped
+    user: root
     ports:
-      - "8081:8080"
+      - "127.0.0.1:8081:8080"
       - "50000:50000"
     volumes:
       - /var/lib/jenkins/jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - TZ=America/Chicago
 
+---
 
+docker compose up -d --build
 
 Get the initial admin password:
 
@@ -86,7 +123,8 @@ server {
 } 
 ##### Make sure the domain take you to the jenkins login page and you can login.
 
-## Make Sure to install SSH Agent Plugin
+## Make Sure to install SSH Agent Plugin in Jenkin  or where ever the jenkins is running
+http://www.dotnetsherpa.com/manage/pluginManager/
 
 ## Setup github webhook
 1. Go to repo to set up webhook, and click on settings 
@@ -132,6 +170,7 @@ Setup ssh credential to run ssh comman in jenkins step.
         -----END OPENSSH PRIVATE KEY-----
    
 8. Log in to webserver or server where jenkins going to ssh in to.
+    if you are running as root, cd root first.
      a. run `cd .ssh/` and run `sudo nano authorized_keys`.
      b. copy the public key from step 6 and paste it. Cntrl X, press y to save.
 9. Create a simple test pipeline task to see if ssh working.
